@@ -5,6 +5,11 @@ namespace CameraBazzar.Web.Models.AccountViewModels
     public class RegisterViewModel
     {
         [Required]
+        [StringLength(20, MinimumLength = 4, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.")]
+        [RegularExpression("[A-Za-z]+", ErrorMessage = "Username must contains only letters.")]
+        public string Username { get; set; }
+
+        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
@@ -19,5 +24,9 @@ namespace CameraBazzar.Web.Models.AccountViewModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [RegularExpression(@"^\+[0-9]{10,12}$", ErrorMessage = "Phone must start with a '+' and contain between 10 and 12 digits")]
+        public string Phone { get; set; }
     }
 }

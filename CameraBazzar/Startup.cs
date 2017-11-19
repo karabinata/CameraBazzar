@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using CameraBazzar.Data.Models;
 using CameraBazzar.Data;
+using CameraBazzar.Web.Infrastructure.Extentions;
 
 namespace CameraBazzar.Web
 {
@@ -24,7 +25,13 @@ namespace CameraBazzar.Web
             services.AddDbContext<CameraBazzarDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>(options =>
+                {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                })
                 .AddEntityFrameworkStores<CameraBazzarDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -34,6 +41,8 @@ namespace CameraBazzar.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseDatabaseMigration();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
